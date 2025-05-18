@@ -4,8 +4,8 @@ import os
 
 app = Flask(__name__)
 
-EMAIL = os.environ.get("Info@clown-pepe.at")
-PASSWORD = os.environ.get("Papa2010@")
+EMAIL = os.environ.get(Info@clown-pepe.at)
+PASSWORD = os.environ.get(Papa2010@)
 
 @app.route("/products")
 def get_products():
