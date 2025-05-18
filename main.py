@@ -1,19 +1,21 @@
+from flask import Flask, jsonify
 import requests
+import os
 
-# Zugangsdaten (ersetzen durch deine echten Zugangsdaten!)
-EMAIL = "Info@clown-pepe.at"
-PASSWORD = "Papa2010@"
+app = Flask(__name__)
 
-# DiFatta API-URL
-url = "https://difattamagic.com/csvprodotti/customerapi/getinfo"
+EMAIL = os.environ.get("Info@clown-pepe.at")
+PASSWORD = os.environ.get("Papa2010@")
 
-# Anfrage senden
-response = requests.post(url, data={"email": EMAIL, "password": PASSWORD})
+@app.route("/products")
+def get_products():
+    url = "https://difattamagic.com/csvprodotti/customerapi/getinfo"
+    response = requests.post(url, data={"email": EMAIL, "password": PASSWORD})
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify({"count": len(data), "products": data[:3]})
+    else:
+        return jsonify({"error": response.text}), response.status_code
 
-# Antwort prüfen und ausgeben
-if response.status_code == 200:
-    data = response.json()
-    print("Produkte empfangen:", len(data))
-    print(data[:3])  # Zeige erste 3 Produkte zur Kontrolle
-else:
-    print("Fehler beim Abrufen:", response.status_code, response.text)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
